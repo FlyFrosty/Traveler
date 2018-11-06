@@ -1,0 +1,66 @@
+<svg class="background">
+  <image id="imageBackground" />
+ 
+  <svg id="myColor" fill ="white">
+    
+    <svg id="allCal" fill="inherit" >
+      <text id="myCalShadow" fill = "black" display = "inherit"/>
+      <text id="myCal" fill="inherit" display = "inherit"/>
+    </svg>
+
+    <svg id="allFitID" fill="inherit"  >
+      <text id="fitIDShadow" fill = "black" display="inherit"/>
+      <text id="fitID" fill="inherit" />
+    </svg>
+    
+    <svg id="mainTime" fill="inherit" display = "inline">
+      <text id="timeShadow" fill="black" display = "inherit"/>
+      <text id="time" fill="inherit" display = "inherit"/>
+      <text id="ampmShadow" fill="black"/>
+      <text id="ampm" fill="inherit"/>
+      <text id="myTZShadaow" fill="black" display = "inherit"/>
+      <text id="myTZ" fill="inherit" display = "inherit"/>
+    </svg>
+    
+    <svg id="myUTCTime" fill="inherit">
+      <text id="myUTCLabelShadow" fill="black" display = "inherit"/>
+      <text id="myUTCLabel" fill="inherit" pointer-events="visible" display = "inherit"/>
+      <text id="lowerAMPMShadow" fill="black" />
+      <text id="lowerAMPM" fill="inherit" />
+      <text id="myZShadow" fill="black" display = "inherit"/>
+      <text id="myZ" fill="inherit" display = "inherit"/>     
+    </svg>
+    
+    <svg id="allFeet" fill="inherit" >
+      <text id="myStepsShadow" fill="black" display = "inherit"/>
+      <text id="mySteps" pointer-events="visible" fill="inherit" display = "inherit"/>
+      <image id="myFeetShadow" fill="black" display = "inherit" x = "78%+2" y="71%+2" width = "44" height = "44" href = "stat_steps_open_48px.png"/>
+      <image id="myFeet" display = "none" x = "78%" y="71%" width = "44" height = "44" href = "stat_steps_open_48px.png" fill="inherit" display = "inherit"/>
+    </svg>
+    
+    <svg id= "allAct" fill="inherit">
+      <text id="myActShadow" fill="black" display = "inherit"/>
+      <text id="myAct" pointer-events="visible" fill="inherit" display = "inherit"/>
+      <image id="myActPicShadow" fill="black" display = "inherit" x = "68%+2" y="71%+2" width = "44" height = "44" href = "stat_am_open_48px.png"/>
+      <image id="myActPic" display = "inherit" fill="inherit" x = "68%" y="71%" width = "44" height = "44" href = "stat_am_open_48px.png" />
+    </svg>
+    
+    <svg id="allBurn" fill="inherit" >
+      <text id="myBurnShadow" display = "inherit"/>
+      <text id="myBurn" pointer-events="visible" fill="inherit" display = "inherit"/>
+      <image id="myBurnPicShadow" fill="black" display = "inherit" x = "75%+2" y="71%+2" width = "44" height = "44" href = "stat_cals_open_48px.png"/>
+      <image id="myBurnPic" display = "inherit" fill="inherit" x = "75%" y="71%" width = "44" height = "44" href = "stat_cals_open_48px.png"/>
+    </svg>
+    
+  </svg>
+  
+  <svg id="batt"> 
+    <svg id="batShell" display = "inherit">
+      <rect id="batBody" display = "inherit"/>
+      <rect id="batHead" display = "inherit"/>
+    </svg>
+    <rect id="batFill" display = "inherit"/>   
+  </svg> 
+  
+</svg>   
+ 
