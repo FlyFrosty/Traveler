@@ -1,0 +1,25 @@
+{
+  "fitbit": {
+    "appUUID": "90370fe3-b56c-4d95-93b8-5a34c12b5134",
+    "appType": "clockface",
+    "appDisplayName": "The Traveler",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "",
+    "requestedPermissions": [
+      "access_activity",
+      "access_user_profile"
+    ],
+    "buildTargets": [
+      "higgs",
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "The Traveler"
+      }
+    }
+  },
+  "devDependencies": {
+    "@fitbit/sdk": "~2.0.0"
+  }
+}
