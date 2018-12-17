@@ -68,6 +68,7 @@ function mySettings(props) {
           {name:"Zulu + 11", value: "+11"},
           {name:"Zulu + 12", value: "+12"},
           {name:"Zulu + 13", value: "+13"},
+          {name:"Zulu - 12", value: "-12"},
           {name:"Zulu - 11", value: "-11"},
           {name:"Zulu - 10", value: "-10"},
           {name:"Zulu - 9", value: "-09"},

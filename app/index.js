@@ -77,10 +77,8 @@ const SETTINGS_TYPE = "cbor";
 
 const imageBackground = document.getElementById("imageBackground");
 
-//Used for the image background
 let mySettings = {};
   
-//All my options in one array
 let myOptions= {timeOrFit: "false",
                 OffsetTime: 25,
                 batDisp: false,
@@ -90,26 +88,26 @@ let myOptions= {timeOrFit: "false",
                 myScreen: device.modelName
                };
 
+console.log(`myScreen device type is <${myOptions.myScreen}>`);
+
 clock.granularity = "minutes";
 
-//loads background image only line 548
+//loads background image only
 loadSettings();
 
-//Load settings from file
+//See if there are saved settings
 loadInfo(myOptions);
 
-//clear the clutter into dual time view line 349
+//clear the clutter
 resetToClock(myOptions);
 
-//Update clock face every minute Line 108
-clock.ontick = () => updateAll(myOptions);
 
-//Produces clock face
+//produces clock face called by loadInfo
 function updateAll(myOptions) {
-  loadSettings(); //this is the background image load
-  mainClock(myOptions); //Line 130
-  myFormCal(); //Line 208
-  updateBat(myOptions); //Line 119
+//  loadSettings(); //this is the background image load
+  mainClock(myOptions);
+  myFormCal();
+  updateBat(myOptions);
   console.log(`myOptions.timeOrFit <${myOptions.timeOrFit}>`);
 
   //Clear everything except steps or second time  
@@ -120,16 +118,15 @@ function updateAll(myOptions) {
   if (myOptions.timeOrFit === "true") {
     console.log("updateAll to updateFitness");
     myUTCTime.style.display = "none";
-    resetToSteps(); //Displays steps when activated in fitness mode line 337
+    resetToSteps();
   } else {
     console.log("updateAll then utcClock");
     allFeet.style.display = "none";
-    resetToClock(myOptions); //Deisplays second clock when activated in dual time mode line 349
+    resetToClock(myOptions);
     console.log(`Sent to utcClock with time <${myOptions.OffsetTime}>`);
   }
 }
 
-//Displays the main time in 12 or 24 hour format
 function mainClock(myOptions) {
 
   let today = new Date();
@@ -137,19 +134,21 @@ function mainClock(myOptions) {
   let mins = util.zeroPad(today.getMinutes());
 
   console.log(`hours ${hours}`);
-  console.log(`prefs T ${myOptions.whatTime}`); //12 or 24 option
+  console.log(`prefs T ${myOptions.whatTime}`);
   
+  //Force a new timeZone from the companion
   //Force a new timeZone from the companion
   if (Date.now() % 900000 < 100) {
     if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
       messaging.peerSocket.send("event");
+    } else {
+      timeZone = "Unknown";
     }
   } else {
     console.log("don't do it"); 
   }
-
+  
   if (myOptions.whatTime === "true") {
-    //runs if 12 hour clock
     ampm.text = util.MyAmpm(hours);
     ampmShadow.text = util.MyAmpm(hours);
     if (hours > 12) {
@@ -157,13 +156,12 @@ function mainClock(myOptions) {
     }
     ampm.style.display = "inline";
     ampmShadow.style.display = "inline";
-    //Adjust font size if font to fill tracker screen better    
     if (hours > 9) {
       if (myOptions.myScreen = "Ionic") {
         time.style.fontSize = 90;
         timeShadow.style.fontSize = 90;        
       } else if (myOptions.myScreen = "Versa") {
-        time.style.fontSize = 90;
+        time.style.fontSize = 80;
         timeShadow.style.fontSize = 90;
       } else {
         time.style.fontSize = 100;
@@ -172,7 +170,6 @@ function mainClock(myOptions) {
     }
     timeShadow.text = `${hours}:${mins}`;
     time.text = `${hours}:${mins}`;
-    //Dynamically calculate where to place AM/PM based on time displayed
     let bboxTime = time.getBBox().right;
     console.log(`bbox width information <${bboxTime}>`);
     ampm.x = bboxTime + 5;
@@ -187,7 +184,6 @@ function mainClock(myOptions) {
 
 };
 
-//Formats the date to my preferred way of seeing it
 function formatDate(date) {
    var monthNames = [
     "Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -220,7 +216,6 @@ function utcClock(myOptions) {
   let UTCHours = today.getUTCHours(); 
   let myAMPM;
    
-  //Offset hours from zulu from settings
   let offsetHours = parseInt(myOptions.OffsetTime);
   
   if (offsetHours === 25) {
@@ -233,14 +228,14 @@ function utcClock(myOptions) {
   let addedHours = offsetHours + UTCHours; //this will be the display hours variable
   console.log(`addedHours before <${addedHours}>`);
   
-  //Correct for outside of 24 hours after zulu offset
   if (addedHours  < 0) {
     addedHours = addedHours + 24;
   } else if (addedHours > 23) {
     addedHours = addedHours - 24;
   }
+
+  console.log(`addedHours after <${addedHours}>`);
   
-  //Display per 24 hour clock
   if (myOptions.whatTime === "false") {
     lowerAMPM.style.display = "none";
     lowerAMPMShadow.style.display = "none";
@@ -248,13 +243,20 @@ function utcClock(myOptions) {
     myUTCLabel.text = `${addedHours}:${mins}`;
     myUTCLabelShadow.text = `${addedHours}:${mins}`;
   } else {
-    //Display 12 hour clock
-    lowerAMPM.text = util.MyAmpm(addedHours);
-    lowerAMPMShadow.text = util.MyAmpm(addedHours);
     if (addedHours > 12) {
+      myAMPM = "PM";
       addedHours = addedHours - 12;
+    } else if (addedHours < 12) {
+      myAMPM = "AM";
+    } else if (addedHours === 12) {
+      myAMPM = "PM";
+    } else if (addedHours === 0) {
+      myAMPM = "AM";
+    } else {
+      console.log("myAMPM is undefined");
     }
-    //Dynamically figure out the end of time for AM/PM placement
+    lowerAMPM.text = `${myAMPM}`;
+    lowerAMPMShadow.text = `${myAMPM}`;
     let bboxTime = myUTCLabel.getBBox().right;
     console.log(`bbox width information <${bboxTime}>`);
     lowerAMPM.x = bboxTime + 5;
@@ -264,8 +266,7 @@ function utcClock(myOptions) {
     myUTCLabel.text = `${addedHours}:${mins}`;
     myUTCLabelShadow.text = `${addedHours}:${mins}`;
   }
-
-  //Display the selected offset from Zulur
+  
   if (offsetHours > 0) {
     myZ.text = `GMT +${offsetHours} Selected`;
     myZShadow.text = `GMT +${offsetHours} Selected`;
@@ -286,7 +287,6 @@ function updateSteps() {
   let stepCt = today.adjusted.steps;
   mySteps.text=stepCt;
   myStepsShadow.text=stepCt;
-  //Dynamic placement of icon
   let bboxStep = mySteps.getBBox().right;
   console.log(`bbox width information <${bboxStep}>`);
   myFeet.x = bboxStep + 5;
@@ -299,7 +299,7 @@ function updateFitness() {
   let actMin = today.adjusted.activeMinutes;
   myAct.text=actMin;
   myActShadow.text=actMin; 
-  //Dynamic placememtn of Icon
+  
   let bboxAct = myAct.getBBox().right;
   console.log(`bbox width information <${bboxAct}>`);
   myActPic.x = bboxAct + 5;
@@ -310,19 +310,17 @@ function updateFitness() {
   myBurn.text = actCal;
   myBurnShadow.text = actCal;
   
-  //Dynamic placement of Icon
   let bboxCal = myBurn.getBBox().right;
   console.log(`bbox width information <${bboxCal}>`);
   myBurnPic.x = bboxCal + 5;
   myBurnPicShadow.x = bboxCal + 7;
 }
 
-//Update's the reported battery charge for display
+
 function updateBat(myOptions)  {
   let level = battery.chargeLevel;
   console.log(`bat charge <${level}>`);
   console.log(`starting updateBat <${myOptions.batDisp}>`);
-  //Adjust percentage to usable size then color code
   batFill.width = Math.floor(batFillWidth * level / 100);
   if (myOptions.batDisp === "true" && batFill.width >= 6) {
     console.log("batDisp = true");
@@ -351,7 +349,6 @@ function resetToSteps() {
   allFitID.style.display = "inline";
 }
 
-//Reset screen to the dual time
 function resetToClock(myOptions){
   allBurn.style.display = "none";   
   allAct.style.display = "none";
@@ -380,7 +377,7 @@ myUTCLabel.onclick = function()  {
   allFitID.style.display = "inline";
 }
 
-//If steps is touched cylce to the secondary display
+//if steps is touched cylce to the secondary display
 mySteps.onclick = function()  {
   allFeet.style.display = "none";
   if (myOptions.timeOrFit === "false") {
@@ -396,7 +393,6 @@ mySteps.onclick = function()  {
   }
 }
 
-//If the Colories burned is touched, cycle to active minutes
 myBurn.onclick = function() {
   allBurn.style.display = "none";
   allAct.style.display = "inline";
@@ -404,7 +400,6 @@ myBurn.onclick = function() {
   fitIDShadow.text = "active minutes";
 }
   
-//If Active minutes is touched, cycle to steps
 myAct.onclick = function() {
   allAct.style.display = "none";
   //Get new steps and display them
@@ -416,9 +411,8 @@ myAct.onclick = function() {
 
 // Read all the different settings from file, apply them and save into myOptions
 function loadInfo(myOptions) {
-
+//function loadColor()
   try { 
-  //Loads default color from file
     myOptions.color = fs.readFileSync("myColor.txt","ascii");
     let loadColor = myOptions.color;
     console.log("Orgional loadColor read " + loadColor);
@@ -440,9 +434,8 @@ function loadInfo(myOptions) {
       myColor.style.fill = loadColor; 
     }
   }
-// loadTimeZone
+// loadTimeZone()
   try {
-  //Loads the time zone reported by the sync device
     myOptions.loadZone = fs.readFileSync("zoneCode.txt","ascii");   
     if (myOptions.loadZone !== undefined) {
       console.log(`new Timezone: <${myOptions.loadZone}>`);
@@ -451,10 +444,12 @@ function loadInfo(myOptions) {
     }
   } catch (error) {
     console.log("No pre-set timezone " + error);
+      myTZ.text = "Unknown";
+      myTZShadow.text = "Unknown";
   }         
 
+// loadOffset()
   try{
-  //Loads the selected offset from Zulu to the second time
     myOptions.OffsetTime = util.stripQuotes(fs.readFileSync("offsetTime.txt","ascii")); 
     if (myOptions.OffsetTime !== undefined) {
       console.log(`new Offset: <${myOptions.OffsetTime}>`);
@@ -465,9 +460,8 @@ function loadInfo(myOptions) {
     console.log("No pre-set offset" + error);
     myOptions.OffsetTime = 25; 
   }
-
+//load battery display settings
   try{
-    //Loads battery display settings
     myOptions.batDisp = fs.readFileSync("batDisp.txt", "ascii");
     if (myOptions.batDisp !== undefined) {
       console.log(`batDisp file read: <${myOptions.batDisp}>`);
@@ -475,9 +469,8 @@ function loadInfo(myOptions) {
   } catch (error) {
       console.log("batDisp not read");
   }
-
+//load second time or fitness display
   try{
-  //Loads second time or fitness display preference
     myOptions.timeOrFit = fs.readFileSync("timeOrFit.txt", "ascii");
     if (myOptions.timeOrFit !== undefined) {
       console.log(`timeOrFit file read: <${myOptions.timeOrFit}>`);
@@ -485,9 +478,7 @@ function loadInfo(myOptions) {
   } catch (error) {
     console.log("timeOrFit not read");
   }
-  
   try{
-    //Loads if to override system 12 or 24 clock with user preference
     myOptions.whatTime = fs.readFileSync("whatTime.txt", "ascii");
     if (myOptions.whatTime !== undefined) {
       console.log(`whatTime file read: <${myOptions.whatTime}>`);
@@ -500,11 +491,9 @@ function loadInfo(myOptions) {
        myOptions.whatTime = "true";
      }
   }
-  
-  updateAll(myOptions); //Actually displays the clock info Line 104
+  updateAll(myOptions);
 }
 
-//Function to load up the background image if received
 inbox.onnewfile = () => {
   let fileName;
   do {
@@ -520,50 +509,44 @@ inbox.onnewfile = () => {
   } while (fileName);
 };
 
-//Handles any inbound options from settings and saves to loacl file
 messaging.peerSocket.onmessage = function (evt) {
 
   console.log(`onmessage key = <${evt.data.key}>`);
   console.log(`onmsg info = <${evt.data.newValue}>`);
   switch (evt.data.key) {
     case 'color':
-      //A new color is received
       let newInfo = util.myColor(evt.data.newValue);
       fs.writeFileSync("myColor.txt",newInfo,"ascii");
       console.log(`myColor file written <${newInfo}>`);
       break;
     case 'offsetTime':
-      //A new Zulu offset is selected
       let myTemp = JSON.parse(evt.data.newValue);
       let newInfo = myTemp.values[0].value;
       fs.writeFileSync("offsetTime.txt",newInfo,"ascii");
       console.log(`offsetTime file written <${newInfo}>`);
       break;
     case 'zoneCode':
-      //A new timezone was received
       let newInfo = evt.data.newValue;
       fs.writeFileSync("zoneCode.txt", newInfo, "ascii");
       console.log(`zoneCode written <${newInfo}>`);
       break;
     case 'batDisp':
-      //Store the option whether to display the battery info or not
       let newInfo = evt.data.newValue;
       fs.writeFileSync("batDisp.txt", newInfo, "ascii");
       console.log(`batDisplay written <${newInfo}>`); 
       break;
     case 'timeOrFit':
-      //Store the option to display either second time or fitness
       let newInfo = evt.data.newValue;
       fs.writeFileSync("timeOrFit.txt", newInfo, "ascii");
       console.log(`timeOrFit written <${newInfo}>`); 
       break;
     case 'whatTime':
-      //Store if 12 or 24 hour display to loacl file
       let newInfo = evt.data.newValue;
       fs.writeFileSync("whatTime.txt", newInfo, "ascii");
       console.log(`whatTime written <${newInfo}>`);
    }
-  //Take saved changes and apply them line 415
+  updateSteps();
+  resetToSteps();
   loadInfo(myOptions);
 };   
 
@@ -590,3 +573,5 @@ function applySettings() {
   display.on = true;
 }
 
+//loadInfo calls from file to load clock
+clock.ontick = () => updateAll(myOptions);

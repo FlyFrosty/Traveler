@@ -9,13 +9,11 @@ import * as messaging from "messaging";
 settingsStorage.setItem("screenWidth", device.screen.width);
 settingsStorage.setItem("screenHeight", device.screen.height);
 
-
-//Listen to see if it is time to check the time zone
-messaging.peerSocket.onmessage = () => {
-  console.log("peerSocket called");
+messaging.peerSocket.onmessage = function(evt) {
+  // Output the message to the console
+  console.log(JSON.stringify(evt.data));
   sendTZ();
-};
-
+}
 
 settingsStorage.onchange = function(evt) {
   if (evt.key === "background-image") {
