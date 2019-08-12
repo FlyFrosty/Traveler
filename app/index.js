@@ -83,7 +83,7 @@ let myOptions= {timeOrFit: "false",
                 OffsetTime: 25,
                 batDisp: false,
                 color: "white",
-                loadZone: "UNK",
+                loadZone: "   ",
                 whatTime: "false",
                 myScreen: device.modelName
                };
@@ -136,16 +136,14 @@ function mainClock(myOptions) {
   console.log(`hours ${hours}`);
   console.log(`prefs T ${myOptions.whatTime}`);
   
-  //Force a new timeZone from the companion
+  
   //Force a new timeZone from the companion
   if (Date.now() % 900000 < 100) {
     if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
       messaging.peerSocket.send("event");
     } else {
-      timeZone = "Unknown";
+      myOptions.loadZone = "UNK";
     }
-  } else {
-    console.log("don't do it"); 
   }
   
   if (myOptions.whatTime === "true") {
@@ -158,14 +156,14 @@ function mainClock(myOptions) {
     ampmShadow.style.display = "inline";
     if (hours > 9) {
       if (myOptions.myScreen = "Ionic") {
-        time.style.fontSize = 90;
-        timeShadow.style.fontSize = 90;        
+        time.style.fontSize = 85;
+        timeShadow.style.fontSize = 85;        
       } else if (myOptions.myScreen = "Versa") {
-        time.style.fontSize = 80;
-        timeShadow.style.fontSize = 90;
+        time.style.fontSize = 75;
+        timeShadow.style.fontSize = 75;
       } else {
-        time.style.fontSize = 100;
-        timeShadow.style.fontSize = 100;        
+        time.style.fontSize = 85;
+        timeShadow.style.fontSize = 85;        
       }
     }
     timeShadow.text = `${hours}:${mins}`;
@@ -212,11 +210,14 @@ function myFormCal()  {
 //Update the text element of myUTCLabel with UTC Time
 function utcClock(myOptions) {
   let today = new Date(); 
-  let mins = util.zeroPad(today.getMinutes()); 
+  let mins = today.getMinutes(); 
   let UTCHours = today.getUTCHours(); 
   let myAMPM;
    
-  let offsetHours = parseInt(myOptions.OffsetTime);
+  let offsetHours = Number(myOptions.OffsetTime);
+  
+  //Variable to see if a +30 offset was requested
+  let halfCheck = 0;
   
   if (offsetHours === 25) {
     offsetHours = 0;
@@ -224,7 +225,31 @@ function utcClock(myOptions) {
   
   console.log(`UTC Hours <${UTCHours}>`);
   console.log(`offsetHours <${offsetHours}>`);
-
+  
+  if (offsetHours !== parseInt(offsetHours)) {
+    halfCheck = 30;
+    console.log("loadOffset ends in 5");
+  } else {
+    halfCheck = 0;
+    console.log("loadOffset ends in 0");
+  }
+   
+  offsetHours = parseInt(offsetHours);
+  console.log(`offsetHours parseInt <${offsetHours}>`);
+  
+  let myDisp = offsetHours;
+  
+  if (halfCheck === 30) {
+    if (mins < 30) {
+      mins = mins + halfCheck;
+    } else {
+      mins = mins - halfCheck;
+      offsetHours = offsetHours + 1;
+    }
+  }
+  
+  mins = util.zeroPad(mins);  
+  
   let addedHours = offsetHours + UTCHours; //this will be the display hours variable
   console.log(`addedHours before <${addedHours}>`);
   
@@ -278,7 +303,30 @@ function utcClock(myOptions) {
     myZShadow.text = `GMT Selected`;
   } else {
     console.log("GMT undefined");
-  }   
+  }  
+  
+  if (myDisp === 0) {
+      myZ.text = `GMT Selected`;
+      myZShadow.text = `GMT Selected`;
+  } else {
+    if (myOptions.OffsetTime > 0) {
+        if (halfCheck === 30) {
+          myZ.text = `GMT +${myDisp}:30 Selected`;
+          myZShadow.text = `GMT +${myDisp}:30 Selected`;
+        } else {
+          myZ.text = `GMT +${myDisp} Selected`;
+          myZShadow.text = `GMT +${myDisp} Selected`;
+        }
+    } else {
+      if (halfCheck === 30) {
+        myZ.text = `GMT ${myDisp}:30 Selected`;
+        myZShadow.text = `GMT ${myDisp}:30 Selected`;
+      } else {
+        myZ.text = `GMT ${myDisp} Selected`;
+        myZShadow.text = `GMT ${myDisp} Selected`;
+      }
+    }
+  }
 }
 
 
@@ -444,8 +492,8 @@ function loadInfo(myOptions) {
     }
   } catch (error) {
     console.log("No pre-set timezone " + error);
-      myTZ.text = "Unknown";
-      myTZShadow.text = "Unknown";
+      myTZ.text = "   ";
+      myTZShadow.text = "   ";
   }         
 
 // loadOffset()

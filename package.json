@@ -17,9 +17,10 @@
       "en": {
         "name": "The Traveler"
       }
-    }
+    },
+    "defaultLanguage": "en-US"
   },
   "devDependencies": {
-    "@fitbit/sdk": "~2.0.0"
+    "@fitbit/sdk": "~3.0.0"
   }
 }

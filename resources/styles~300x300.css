@@ -30,7 +30,7 @@
 }
 
 #time {
-  font-size: 100;
+  font-size: 85;
   font-family: System-Bold;
   text-length: 32;
   text-anchor: middle;
@@ -40,7 +40,7 @@
 }
 
 #timeShadow {
-  font-size: 100;
+  font-size: 85;
   font-family: System-Bold;
   text-length: 32;
   text-anchor: middle;
@@ -70,7 +70,7 @@
 }
 
 #myCalShadow {
-  font-size: 48;
+  font-size: 44;
   font-family: System-Bold;
   text-length: 32;
   text-anchor: middle;
@@ -80,7 +80,7 @@
 }
 
 #myCal {
-  font-size: 48;
+  font-size: 44;
   font-family: System-Bold;
   text-length: 32;
   text-anchor: middle;
@@ -277,6 +277,4 @@
   y: 98%;
   fill: white;  
 }
-
-
 
