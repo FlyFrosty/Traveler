@@ -216,13 +216,18 @@ function utcClock(myOptions) {
    
   let offsetHours = Number(myOptions.OffsetTime);
   
+  let negTime = false;
+  
   //Variable to see if a +30 offset was requested
   let halfCheck = 0;
   
   if (offsetHours === 25) {
     offsetHours = 0;
   }
-  
+  //See if it is a positive or negative offset
+  if (offsetHours < 0) {
+    negTime = true;
+  }
   console.log(`UTC Hours <${UTCHours}>`);
   console.log(`offsetHours <${offsetHours}>`);
   
@@ -240,13 +245,22 @@ function utcClock(myOptions) {
   let myDisp = offsetHours;
   
   if (halfCheck === 30) {
-    if (mins < 30) {
-      mins = mins + halfCheck;
+    if (negTime === false) {
+      if (mins < 30) {
+        mins = mins + halfCheck;
+      } else {
+        mins = mins - halfCheck;
+        offsetHours = offsetHours + 1;
+      }
     } else {
-      mins = mins - halfCheck;
-      offsetHours = offsetHours + 1;
+      if (mins >= 30) {
+        mins = mins - halfCheck;
+      } else {
+        mins = mins + halfCheck;
+        offsetHours = offsetHours - 1;
+      }
     }
-  }
+  }  
   
   mins = util.zeroPad(mins);  
   

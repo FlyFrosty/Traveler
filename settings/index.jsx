@@ -54,6 +54,14 @@ function mySettings(props) {
         label={`Select an offset from GMT (Zulu)`}
         settingsKey="offsetTime"
         options={[
+          {name:"Zulu - 12", value: "-12.0"},
+          {name:"Zulu - 11", value: "-11.0"},
+          {name:"Zulu - 10+30", value: "-10.5"},
+          {name:"Zulu - 10", value: "-10.0"},
+          {name:"Zulu - 9", value: "-09.0"},
+          {name:"Zulu - 8", value: "-08.0"},           
+          {name:"Zulu - 7", value: "-07.0"},
+          {name:"Zulu - 6", value: "-06.0"},  
           {name:"Zulu - 5", value: "-05.0"},
           {name:"Zulu - 4", value: "-04.0"},
           {name:"Zulu - 3", value: "-03.0"},
@@ -63,7 +71,7 @@ function mySettings(props) {
           {name:"Zulu + 1", value: "+01.0"},
           {name:"Zulu + 2", value: "+02.0"},           
           {name:"Zulu + 3", value: "+03.0"},
-          {name:"Zulu + 3:30", value: "+3.3"},
+          {name:"Zulu + 3:30", value: "+3.5"},
           {name:"Zulu + 4", value: "+04.0"},
           {name:"Zulu + 4:30", value: "+04.5"},
           {name:"Zulu + 5", value: "+05.0"},
@@ -76,14 +84,7 @@ function mySettings(props) {
           {name:"Zulu + 10", value: "+10.0"},
           {name:"Zulu + 11", value: "+11.0"},
           {name:"Zulu + 12", value: "+12.0"},
-          {name:"Zulu + 13", value: "+13.0"},
-          {name:"Zulu - 12", value: "-12.0"},
-          {name:"Zulu - 11", value: "-11.0"},
-          {name:"Zulu - 10", value: "-10.0"},
-          {name:"Zulu - 9", value: "-09.0"},
-          {name:"Zulu - 8", value: "-08.0"},           
-          {name:"Zulu - 7", value: "-07.0"},
-          {name:"Zulu - 6", value: "-06.0"}  
+          {name:"Zulu + 13", value: "+13.0"}
         ]}
       />
     </Section>
